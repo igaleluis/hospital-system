@@ -6,4 +6,3 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["hospital-app:8080"]
-      
