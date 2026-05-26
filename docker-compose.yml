@@ -3,6 +3,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: hospital-mysql
+    restart: always
 
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -14,15 +15,23 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   app:
-    build: .
+    image: aleluis/hospital-system:latest
     container_name: hospital-app
+    restart: always
 
     ports:
       - "8080:8080"
 
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hospitaldb
