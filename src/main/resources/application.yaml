@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://mysql-hospital:3306/hospital
+    url: jdbc:mysql://mysql:3306/hospitaldb
     username: root
-    password: 1234
+    password: root
 
   jpa:
     hibernate:
