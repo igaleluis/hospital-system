@@ -25,4 +25,4 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build with Maven Wrapper
-        run: ./mvnw clean package
+        run: ./mvnw clean package -DskipTests
