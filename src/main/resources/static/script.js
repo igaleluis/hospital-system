@@ -8,7 +8,7 @@ let turnCounter    = 1;
 let attendedCount  = 0;
 let currentPatient = null;
 let toastInstance  = null;
-const API_URL = "http://34.134.103.227:8080/patients";
+const API_URL = "http://34.134.103.227/patients";
 
 async function loadPatients() {
   try {
