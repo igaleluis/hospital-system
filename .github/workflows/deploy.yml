@@ -48,6 +48,9 @@ jobs:
           script: |
             cd ~/hospital-system
 
+            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+
+            git reset --hard
             git pull origin main
 
             docker-compose pull
