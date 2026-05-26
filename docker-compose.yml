@@ -7,8 +7,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: hospitaldb
-    ports:
-      - "3307:3306"
+    expose:
+      - "3306"
     networks:
       - hospital-net
 
