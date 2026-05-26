@@ -9,8 +9,8 @@ services:
       MYSQL_DATABASE: hospitaldb
     ports:
       - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
+    networks:
+      - hospital-net
 
   app:
     image: ${DOCKER_USERNAME}/hospital-system:latest
@@ -24,6 +24,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hospitaldb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - hospital-net
 
-volumes:
-  mysql_data:
+networks:
+  hospital-net:
