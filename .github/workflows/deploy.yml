@@ -47,18 +47,8 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
 
-            
-
             cd ~/hospital-system
 
-            # Traer cambios del repo (solo si lo usa VM)
-            git pull origin main || true
-
-            # Descargar nueva imagen
             docker compose pull
 
-            # Levantar servicios SIN borrar volumenes
-            docker compose up -d
-
-            # Limpiar imágenes viejas 
-            docker image prune -f
+            docker compose up -d --build --force-recreate
