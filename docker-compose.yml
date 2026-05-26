@@ -13,7 +13,7 @@ services:
       - hospital-net
 
   app:
-    image: ${DOCKER_USERNAME}/hospital-system:latest
+    image: aleluis/hospital-system:latest
     container_name: hospital-app
     restart: always
     ports:
