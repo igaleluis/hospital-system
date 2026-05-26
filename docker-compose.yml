@@ -7,8 +7,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: hospitaldb
-    expose:
-      - "3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - hospital-net
 
@@ -29,3 +29,6 @@ services:
 
 networks:
   hospital-net:
+
+volumes:
+  mysql_data:

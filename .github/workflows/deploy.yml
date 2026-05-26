@@ -1,4 +1,4 @@
-name: CI-CD Pipeline
+name: CI-CD Hospital System
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Java 21
@@ -46,13 +46,19 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
+
+            
+
             cd ~/hospital-system
 
-            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            # Traer cambios del repo (solo si lo usa VM)
+            git pull origin main || true
 
-            git reset --hard
-            git pull origin main
+            # Descargar nueva imagen
+            docker compose pull
 
-            docker-compose pull
-            docker-compose down
-            docker-compose up -d --build
+            # Levantar servicios SIN borrar volumenes
+            docker compose up -d
+
+            # Limpiar imágenes viejas 
+            docker image prune -f
