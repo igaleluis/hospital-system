@@ -23,11 +23,12 @@ public class PacienteController {
         return repository.findAll();
     }
 
-    @PostMapping
+   @PostMapping
     public Paciente guardarPaciente(@RequestBody Paciente paciente) {
         paciente.setHoraLlegada(LocalDateTime.now());
         return repository.save(paciente);
     }
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         repository.deleteById(id);
