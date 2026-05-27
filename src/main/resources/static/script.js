@@ -284,7 +284,10 @@ function renderTable() {
                    : p.status === 'Atendido'     ? 'row-done'
                    : '';
 
-    const time = p.arrivalTime.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    const time = new Date(p.arrivalTime).toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
     return `
       <tr class="${rowClass} row-enter" style="animation-delay:${i * 0.04}s">
