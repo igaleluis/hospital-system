@@ -184,18 +184,42 @@ function finishAttention() {
 }
 
 // ── REMOVE PATIENT ─────────────────────────────────
-function removePatient(id) {
+async function removePatient(id) {
   const idx = patients.findIndex(p => p.id === id);
   if (idx === -1) return;
+
   const p = patients[idx];
+
   if (p.status === 'En Atención') {
     showToast('warning', 'No permitido', 'No puedes eliminar un paciente en atención');
     return;
   }
-  patients.splice(idx, 1);
-  renderTable();
-  updateDashboard();
-  showToast('error', 'Paciente eliminado', `${p.name} fue removido de la lista`);
+
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al eliminar en el servidor');
+    }
+
+    // Opcional: también lo quitas localmente para respuesta inmediata
+    patients.splice(idx, 1);
+
+    renderTable();
+    updateDashboard();
+
+    showToast(
+      'success',
+      'Paciente eliminado',
+      `${p.name} fue removido de la lista`
+    );
+
+  } catch (error) {
+    console.error(error);
+    showToast('error', 'Error', 'No se pudo eliminar el paciente');
+  }
 }
 
 // ── RENDER TABLE ───────────────────────────────────
