@@ -73,4 +73,7 @@ public class Paciente {
     public void setHoraLlegada(String horaLlegada) {
         this.horaLlegada = horaLlegada;
     }
+    public void setId(Long id) {
+    this.id = id;
+    }
 }

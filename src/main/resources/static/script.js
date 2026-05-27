@@ -139,7 +139,7 @@ function insertByPriority(patient) {
 }
 
 // ── ATTEND NEXT ────────────────────────────────────
-function attendNext() {
+async function attendNext() {
   if (currentPatient) {
     showToast('warning', 'Paciente en atención', 'Finaliza la atención actual antes de llamar al siguiente');
     return;
@@ -148,39 +148,48 @@ function attendNext() {
   const next = patients.find(p => p.status === 'Esperando');
   if (!next) return;
 
-  next.status    = 'En Atención';
-  currentPatient = next;
+  try {
+    await fetch(`${API_URL}/${next.id}/status?estado=En Atención`, {
+      method: 'PATCH'
+    });
 
-  document.getElementById('currentPatientName').textContent = next.name;
-  document.getElementById('currentPatientBanner').classList.remove('d-none');
-  document.getElementById('notifDot').classList.add('show');
+    currentPatient = next;
 
-  renderTable();
-  updateDashboard();
-  showToast('info', 'Llamando paciente', `Turno ${next.turn} — ${next.name}`);
+    document.getElementById('currentPatientName').textContent = next.name;
+    document.getElementById('currentPatientBanner').classList.remove('d-none');
+
+    await loadPatients(); // 🔥 refresca desde backend
+
+    showToast('info', 'Llamando paciente', `Turno ${next.turn} — ${next.name}`);
+
+  } catch (error) {
+    console.error(error);
+    showToast('error', 'Error', 'No se pudo actualizar el paciente');
+  }
 }
 
 // ── FINISH ATTENTION ───────────────────────────────
-function finishAttention() {
+async function finishAttention() {
   if (!currentPatient) return;
 
-  currentPatient.status = 'Atendido';
-  attendedCount++;
-  currentPatient = null;
+  try {
+    await fetch(`${API_URL}/${currentPatient.id}/status?estado=Atendido`, {
+      method: 'PATCH'
+    });
 
-  document.getElementById('currentPatientBanner').classList.add('d-none');
-  document.getElementById('notifDot').classList.remove('show');
+    attendedCount++;
+    currentPatient = null;
 
-  // Remove attended patients after 4 s
-  setTimeout(() => {
-    patients = patients.filter(p => p.status !== 'Atendido');
-    renderTable();
-    updateDashboard();
-  }, 4000);
+    document.getElementById('currentPatientBanner').classList.add('d-none');
 
-  renderTable();
-  updateDashboard();
-  showToast('success', 'Atención completada', 'El paciente ha sido dado de alta');
+    await loadPatients(); // 🔥 refresca desde backend
+
+    showToast('success', 'Atención completada', 'El paciente ha sido dado de alta');
+
+  } catch (error) {
+    console.error(error);
+    showToast('error', 'Error', 'No se pudo finalizar la atención');
+  }
 }
 
 // ── REMOVE PATIENT ─────────────────────────────────

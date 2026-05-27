@@ -31,4 +31,15 @@ public class PacienteController {
         repository.deleteById(id);
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/{id}")
+    public Paciente actualizar(@PathVariable Long id, @RequestBody Paciente paciente) {
+        paciente.setId(id);
+        return repository.save(paciente);
+    }
+    @PatchMapping("/{id}/status")
+    public Paciente cambiarEstado(@PathVariable Long id, @RequestParam String estado) {
+        Paciente p = repository.findById(id).orElseThrow();
+        p.setEstado(estado);
+        return repository.save(p);
+    }
 }
