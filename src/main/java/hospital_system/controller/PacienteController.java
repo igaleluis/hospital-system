@@ -4,6 +4,7 @@ import hospital_system.model.Paciente;
 import hospital_system.repository.PacienteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,5 +25,10 @@ public class PacienteController {
     @PostMapping
     public Paciente guardarPaciente(@RequestBody Paciente paciente) {
         return repository.save(paciente);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        repository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }
