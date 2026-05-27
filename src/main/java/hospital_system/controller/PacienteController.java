@@ -42,4 +42,11 @@ public class PacienteController {
         p.setEstado(estado);
         return repository.save(p);
     }
+    @PutMapping("/reset")
+    public void reset() {
+        repository.findAll().forEach(p -> {
+            p.setEstado("Esperando");
+            repository.save(p);
+        });
+    }
 }

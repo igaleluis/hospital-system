@@ -8,6 +8,11 @@ let turnCounter    = 1;
 let attendedCount  = 0;
 let currentPatient = null;
 let toastInstance  = null;
+const weight = {
+  Emergencia: 3,
+  Urgencia: 2,
+  Normal: 1
+};
 const API_URL = "https://hospital-proyecto-luis.duckdns.org/patients";
 
 async function loadPatients() {
@@ -15,14 +20,14 @@ async function loadPatients() {
     const response = await fetch(API_URL);
     const data = await response.json();
 
-    patients = data.map((p, index) => ({
+    patients = data.map(p => ({
       id: p.id,
-      turn: index + 1,
+      turn: 0,
       name: p.nombre,
       age: p.edad,
       symptoms: p.sintomas,
       priority: p.prioridad,
-      arrivalTime: new Date(),
+      arrivalTime: p.horaLlegada, // 🔥 VIENE DEL BACKEND
       status: p.estado || 'Esperando'
     }));
 
@@ -145,7 +150,17 @@ async function attendNext() {
     return;
   }
 
-  const next = patients.find(p => p.status === 'Esperando');
+  const next = patients
+    .filter(p => p.status === 'Esperando')
+    .sort((a, b) => {
+      const diff = (weight[b.priority] || 1) - (weight[a.priority] || 1);
+
+      if (diff !== 0) return diff;
+
+      // FIFO dentro de misma prioridad
+      return new Date(a.arrivalTime) - new Date(b.arrivalTime);
+    })[0];
+
   if (!next) return;
 
   try {
@@ -158,7 +173,7 @@ async function attendNext() {
     document.getElementById('currentPatientName').textContent = next.name;
     document.getElementById('currentPatientBanner').classList.remove('d-none');
 
-    await loadPatients(); // 🔥 refresca desde backend
+    await loadPatients();
 
     showToast('info', 'Llamando paciente', `Turno ${next.turn} — ${next.name}`);
 
@@ -182,7 +197,7 @@ async function finishAttention() {
 
     document.getElementById('currentPatientBanner').classList.add('d-none');
 
-    await loadPatients(); // 🔥 refresca desde backend
+    await loadPatients();
 
     showToast('success', 'Atención completada', 'El paciente ha sido dado de alta');
 
