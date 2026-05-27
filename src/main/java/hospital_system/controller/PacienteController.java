@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,7 @@ public class PacienteController {
 
     @PostMapping
     public Paciente guardarPaciente(@RequestBody Paciente paciente) {
+        paciente.setHoraLlegada(LocalDateTime.now());
         return repository.save(paciente);
     }
     @DeleteMapping("/{id}")

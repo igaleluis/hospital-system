@@ -1,9 +1,10 @@
 package hospital_system.model;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 public class Paciente {
@@ -17,8 +18,10 @@ public class Paciente {
     private String sintomas;
     private String prioridad;
     private String estado;
-    private String horaLlegada;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime horaLlegada;
 
+    
     public Paciente() {
     }
 
@@ -66,11 +69,11 @@ public class Paciente {
         this.estado = estado;
     }
 
-    public String getHoraLlegada() {
+    public LocalDateTime getHoraLlegada() {
         return horaLlegada;
     }
 
-    public void setHoraLlegada(String horaLlegada) {
+    public void setHoraLlegada(LocalDateTime horaLlegada) {
         this.horaLlegada = horaLlegada;
     }
     public void setId(Long id) {
