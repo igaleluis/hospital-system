@@ -20,14 +20,14 @@ async function loadPatients() {
     const response = await fetch(API_URL);
     const data = await response.json();
 
-    patients = data.map(p => ({
+    patients = data.map((p, index) => ({
       id: p.id,
-      turn: 0,
+      turn: index + 1,
       name: p.nombre,
       age: p.edad,
       symptoms: p.sintomas,
       priority: p.prioridad,
-      arrivalTime: p.horaLlegada, // 🔥 VIENE DEL BACKEND
+      arrivalTime: p.horaLlegada ? new Date(p.horaLlegada) : new Date(),
       status: p.estado || 'Esperando'
     }));
 
@@ -88,8 +88,7 @@ async function addPatient() {
     edad: age,
     sintomas: symptoms,
     prioridad: priority,
-    estado: 'Esperando',
-    horaLlegada: new Date().toLocaleTimeString()
+    estado: 'Esperando'
   };
 
   try {
@@ -284,10 +283,12 @@ function renderTable() {
                    : p.status === 'Atendido'     ? 'row-done'
                    : '';
 
-    const time = new Date(p.arrivalTime).toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    const time = p.arrivalTime
+    ? new Date(p.arrivalTime).toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : '--:--';
 
     return `
       <tr class="${rowClass} row-enter" style="animation-delay:${i * 0.04}s">
