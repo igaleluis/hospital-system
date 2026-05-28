@@ -43,12 +43,12 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
-
-  volumes:
-    grafana-data:
+    networks:
+      - hospital-net
 
 networks:
   hospital-net:
 
 volumes:
   mysql_data:
+  grafana-data:
