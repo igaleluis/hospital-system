@@ -29,6 +29,7 @@ Prometheus
 Grafana
 Seguridad
 Nginx
+DnsDuck
 HTTPS
 Certbot
 Let’s Encrypt
